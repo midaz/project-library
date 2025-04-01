@@ -76,10 +76,22 @@ function addBookCard (){
     cardPages.innerHTML = "<strong> Pages:  </strong>" + lastBook.numPages;
     card.appendChild(cardPages);
 
-    // Add if book read
+    // Add if book read lastBook.read;
     const cardRead = document.createElement("p");
-    cardRead.innerHTML = "<strong> Read:  </strong>" + lastBook.read;
+    cardRead.innerHTML = "<strong> Read:  </strong>" 
+
+    const toggle = document.createElement("label");
+    toggle.classList.add("switch")
+    const toggleInput = document.createElement("input")
+    toggleInput.setAttribute("type","checkbox");
+
+    const slider = document.createElement("span");
+    slider.classList.add("slider", "round")
+    
     card.appendChild(cardRead);
+    cardRead.appendChild(toggle);
+    toggle.appendChild(toggleInput)
+    toggle.appendChild(slider)
 
     // Add delete button
     const deleteButton = document.createElement("button");
