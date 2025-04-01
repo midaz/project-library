@@ -34,52 +34,62 @@ function editBookInLibrary(id, title, author, numPages, read) {
     });
 }
 
+// Passes form data into addBooktoLibrary
+function addFormtoLibrary(){
+    const form = document.querySelector("form");
+    const formData = new FormData(form);
+    const title = formData.get("title");
+    const author = formData.get("author");
+    const pages = formData.get("numPages");
+    const status = formData.get("status");
+    addBookToLibrary(title, author, pages, status)
 
-// --- TESTING ---
+}
 
-// Add books
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, true);
-addBookToLibrary("Dune", "Frank Herbert", 412, false);
+function addBookCard (){
+    
+    const lastBook = myLibrary[myLibrary.length-1];
+    
+    // Add card
+    const library = document.querySelector(".library");
+    const card = document.createElement("div");
+    card.classList.add("book-card");
+    library.appendChild(card);
 
-console.log("📚 Library Before Edit:");
-console.log(myLibrary);
+    // Add book title
+    const cardHeader = document.createElement("h3");
+    cardHeader.textContent = lastBook.title;
+    card.appendChild(cardHeader);
 
-// Edit first book
-const hobbitID = myLibrary[0].id;
-editBookInLibrary(hobbitID, "The Hobbit (Edited)", "J.R.R. Tolkien", 300, false);
+    // Add book author
+    const cardAuthor = document.createElement("p");
+    cardAuthor.innerHTML = "<strong> Author:  </strong>" + lastBook.author;
+    card.appendChild(cardAuthor);
 
-console.log("✏️ Library After Edit:");
-console.log(myLibrary);
+    // Add book pages
+    const cardPages = document.createElement("p");
+    cardPages.innerHTML = "<strong> Pages:  </strong>" + lastBook.numPages;
+    card.appendChild(cardPages);
 
-// Remove second book
-const duneID = myLibrary[1].id;
-removeBookFromLibrary(duneID);
+    // Add if book read
+    const cardRead = document.createElement("p");
+    cardRead.innerHTML = "<strong> Read:  </strong>" + lastBook.read;
+    card.appendChild(cardRead);
 
-console.log("❌ Library After Delete:");
-console.log(myLibrary);
+    // Add delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add("delete-btn");
+    deleteButton.textContent = "Remove"
+    deleteButton.addEventListener("click", (e) => {
+        card.remove();
+    })
+    card.appendChild(deleteButton);
+}
 
+// Form event listener
+    document.querySelector("form").addEventListener("submit", (e) => {
+        e.preventDefault(); // stops form from actually submitting
+        addFormtoLibrary();
+        addBookCard();
+  });
 
-const showButton = document.getElementById("showDialog");
-const favDialog = document.getElementById("favDialog");
-const outputBox = document.querySelector("output");
-const selectEl = favDialog.querySelector("select");
-const confirmBtn = favDialog.querySelector("#confirmBtn");
-
-// "Show the dialog" button opens the <dialog> modally
-showButton.addEventListener("click", () => {
-  favDialog.showModal();
-});
-
-// "Cancel" button closes the dialog without submitting because of [formmethod="dialog"], triggering a close event.
-favDialog.addEventListener("close", (e) => {
-  outputBox.value =
-    favDialog.returnValue === "default"
-      ? "No return value."
-      : `ReturnValue: ${favDialog.returnValue}.`; // Have to check for "default" rather than empty string
-});
-
-// Prevent the "confirm" button from the default behavior of submitting the form, and close the dialog with the `close()` method, which triggers the "close" event.
-confirmBtn.addEventListener("click", (event) => {
-  event.preventDefault(); // We don't want to submit this fake form
-  favDialog.close(selectEl.value); // Have to send the select box value here.
-});
