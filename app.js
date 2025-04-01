@@ -34,10 +34,6 @@ function editBookInLibrary(id, title, author, numPages, read) {
     });
 }
 
-function toggleRead(){
-
-}
-
 // Passes form data into addBooktoLibrary
 function addFormtoLibrary(){
     const form = document.querySelector("form");
@@ -47,13 +43,13 @@ function addFormtoLibrary(){
     const pages = formData.get("numPages");
     const status = formData.get("status");
     addBookToLibrary(title, author, pages, status)
-
 }
 
 // Adds a book card to grid
 function addBookCard (){
     
     const lastBook = myLibrary[myLibrary.length-1];
+    const isRead = lastBook.read;
     
     // Add card
     const library = document.querySelector(".library");
@@ -76,17 +72,27 @@ function addBookCard (){
     cardPages.innerHTML = "<strong> Pages:  </strong>" + lastBook.numPages;
     card.appendChild(cardPages);
 
-    // Add if book read lastBook.read;
+    // Add book read toggle 
     const cardRead = document.createElement("p");
     cardRead.innerHTML = "<strong> Read:  </strong>" 
 
+
     const toggle = document.createElement("label");
-    toggle.classList.add("switch")
     const toggleInput = document.createElement("input")
     toggleInput.setAttribute("type","checkbox");
 
     const slider = document.createElement("span");
-    slider.classList.add("slider", "round")
+    toggle.classList.add("switch")
+    
+        // Set toggle active if book is read
+        if (isRead.toLowerCase() == "read"){
+            toggleInput.checked = true;
+            slider.classList.add("slider", "rectangle");
+        }
+        else{
+            toggleInput.checked = false;
+            slider.classList.add("slider", "rectangle");
+        }
     
     card.appendChild(cardRead);
     cardRead.appendChild(toggle);
@@ -110,4 +116,24 @@ function addBookCard (){
         addFormtoLibrary();
         addBookCard();
   });
+  
 
+  // Read toggle event listener
+  document.querySelector(".library").addEventListener("click", (e) => {
+    if (e.target.matches("input[type='checkbox']")) {
+        const isChecked = e.target.checked;
+
+        // 2. Find the nearest book card (the one this toggle belongs to)
+        const card = e.target.closest(".book-card");
+        const title = card.querySelector("h3").textContent;
+
+        // 3. Find the matching book in the library
+        const book = myLibrary.find(b => b.title === title);
+
+        // 4. Update the book’s read status
+        if (book) {
+            book.read = isChecked ? "Read" : "Not Read";
+            console.log(`Updated "${book.title}" to: ${book.read}`);
+        }
+    } 
+});
