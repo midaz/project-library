@@ -34,6 +34,10 @@ function editBookInLibrary(id, title, author, numPages, read) {
     });
 }
 
+function toggleRead(){
+
+}
+
 // Passes form data into addBooktoLibrary
 function addFormtoLibrary(){
     const form = document.querySelector("form");
@@ -46,6 +50,7 @@ function addFormtoLibrary(){
 
 }
 
+// Adds a book card to grid
 function addBookCard (){
     
     const lastBook = myLibrary[myLibrary.length-1];
@@ -82,6 +87,7 @@ function addBookCard (){
     deleteButton.textContent = "Remove"
     deleteButton.addEventListener("click", (e) => {
         card.remove();
+        removeBookFromLibrary(lastBook.id);
     })
     card.appendChild(deleteButton);
 }
